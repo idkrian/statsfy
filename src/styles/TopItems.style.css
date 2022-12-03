@@ -1,0 +1,88 @@
+#container{
+    margin-top: 1em;
+    display: flex;
+    justify-content: center;
+}
+
+#titleDiv{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+#songsDiv{
+    display: flex;
+    flex-direction: column;
+    float: left;
+}
+#imageDiv{
+  float: right;
+  display: flex;
+  flex-direction: column;
+}
+#imageGradient{
+  mask-image: linear-gradient(to left, rgba(0, 0, 0, 1.0) 20%, transparent 100%);
+}
+#songDiv{
+    width: 200px;
+    display: flex;
+    justify-content: space-around;
+}
+#songTitle{
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0.5em;
+    font-size: 20px;
+    color: #ffffff;
+    display: flex;
+    justify-content: flex-start;
+    width: 400px;
+}
+#songIndex{
+    font-weight: bold;
+    margin: 0.5em;
+    font-size: 20px;
+    color: #3d4554;
+}
+
+#titleButton {
+    font-size: 14px;
+    color: #e1e1e1;
+    font-family: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    position: relative;
+    border: none;
+    background: none;
+    text-transform: uppercase;
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-duration: 400ms;
+    transition-property: color;
+  }
+  
+  #titleButton:focus,
+  #titleButton:hover {
+    color: #fff;
+  }
+  
+  #titleButton:focus:after,
+  #titleButton:hover:after {
+    width: 100%;
+    left: 0%;
+  }
+  
+  #titleButton:after {
+    content: "";
+    pointer-events: none;
+    bottom: -2px;
+    left: 50%;
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background-color: #7F00FF;
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-duration: 400ms;
+    transition-property: width, left;
+  }

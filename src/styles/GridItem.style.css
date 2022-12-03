@@ -1,0 +1,32 @@
+#genresDiv{
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0.5em;
+    font-size: 20px;
+    color: #ffffff;
+    display: flex;
+    justify-content: flex-start;
+    width: 400px;
+    flex-direction: column;
+}
+
+#gridTitleDiv{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: #7F00FF
+}
+#topSongsDiv{
+    font-weight: bold;
+    margin: 0.5em;
+    font-size: 20px;
+    color: #ffffff;
+}
+#songInfo{
+    font-weight: bold;
+    margin: 0.5em;
+    font-size: 20px;
+    color: #ffffff;
+}
