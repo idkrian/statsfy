@@ -59,7 +59,7 @@ export default function Artist() {
                         </div>
                         <div>
                             <div id="titleDiv">
-                                <p style={{ color: '#7F00FF' }}>Artist</p>
+                                <p style={{ color: '#7F00FF', marginLeft: "0.3em" }}>Artist</p>
                             </div>
                             <Grid
                                 container

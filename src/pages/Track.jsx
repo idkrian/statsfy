@@ -53,7 +53,7 @@ export default function Track() {
                         </div>
                         <div>
                             <div id="titleDiv">
-                                <p style={{ color: '#7F00FF' }}>Artist</p>
+                                <p style={{ color: '#7F00FF', marginLeft: "0.3em" }}>Track</p>
                             </div>
                             <Grid
                                 container
@@ -72,7 +72,7 @@ export default function Track() {
                             </Grid>
                         </div >
                     </div>
-                    <Grid2 container spacing={2} columns={{ xs: 10, sm: 10, md: 15 }} style={{ width: '100%' }}>
+                    <Grid2 container spacing={2} columns={{ xs: 10, sm: 10, md: 15 }} style={{ width: '100%', marginTop: '5em' }}>
                         <FeatureItems title='Happines' description='Music that is happy and cheerful.' data={features.valence} />
                         <FeatureItems title='Acoustic' description='Music with no electric instruments.' data={features.acousticness} />
                         <FeatureItems title='Dance' description='Music that makes you want to move it' data={features.danceability} />

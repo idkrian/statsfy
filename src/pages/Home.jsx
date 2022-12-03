@@ -39,7 +39,7 @@ export default function Home() {
             <h1 style={{ color: '#7F00FF' }}>
                 Statsfy
             </h1>
-            <div style={{ width: '100%' }}>
+            <div style={{ width: '100%', marginTop: '0.5em' }}>
                 {!token ?
                     <Link href={url}>
                         <button id="loginButton">
