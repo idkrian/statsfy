@@ -51,3 +51,42 @@ export const getTopTracks = async (token) => {
     return error;
   }
 };
+export const getTrack = async (token, id) => {
+  try {
+    const data = await axios.get(`${baseURL}/tracks/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data.data.items;
+  } catch (error) {
+    return error;
+  }
+};
+export const getRecentlyPlayed = async (token) => {
+  try {
+    const data = await axios.get(`${baseURL}me/player/recently-played`, {
+      params: {
+        limit: 50,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data.data.items;
+  } catch (error) {
+    return error;
+  }
+};
+export const getAudioFeatures = async (token, ids) => {
+  try {
+    const data = await axios.get(`${baseURL}audio-features?ids=${ids}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data.data.audio_features;
+  } catch (error) {
+    return error;
+  }
+};

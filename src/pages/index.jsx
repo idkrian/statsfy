@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Stats from "./stats";
 import logo from "../images/spotify.png";
 import Image from "next/image";
 
@@ -8,7 +5,7 @@ const client_id = "287c949757504329b8508ecd7671196c";
 const response_type = "token";
 const auth_endpoint = "https://accounts.spotify.com/authorize";
 const redirect_url = "http://localhost:3000/stats/";
-const scopes = "user-top-read";
+const scopes = "user-top-read user-read-recently-played";
 console.log(
   `${auth_endpoint}?client_id=${client_id}&redirect_uri=${redirect_url}&response_type=${response_type}&scope=${scopes}`
 );
