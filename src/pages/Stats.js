@@ -59,7 +59,6 @@ const Stats = () => {
     for (let i = 0; i < trackAverage.length; i++) {
       track[labels[i]] = trackAverage[i];
     }
-    console.log(track);
     return track;
   }
 
@@ -93,7 +92,6 @@ const Stats = () => {
   //   window.localStorage.removeItem("token");
   // };
 
-  console.log(analyzedTracks);
   return (
     <div className="snap-y snap-mandatory h-screen w-screen overflow-scroll overflow-x-hidden scroll-smooth">
       <div className="snap-end bg-[#1a1a1a] h-screen flex items-center justify-center text-sm flex-col">
