@@ -5,6 +5,8 @@ import {
   handleToken,
   getRecentlyPlayed,
   getAudioFeatures,
+  getUser,
+  getUserPlaylists,
 } from "@/helpers/api";
 import { Progress } from "@/components/ui/progress";
 
@@ -23,6 +25,7 @@ const Stats = () => {
     "liveness",
     "loudness",
     "speechiness",
+    "valence",
   ];
   async function handleRecentlyPlayed(tokenData, recentlyPlayedArray) {
     let minhaString = "";
@@ -80,16 +83,17 @@ const Stats = () => {
       );
       const analyzedTrack = formatAnalysedTrack(analyzedTracksArrayData);
       setAnalyzedTracks(analyzedTrack);
+      const userPlaylistsData = await getUserPlaylists(tokenData);
     }
     getData();
   }, []);
-
   //Implementar----
   // const logout = () => {
   //   setToken("");
   //   window.localStorage.removeItem("token");
   // };
-  console.log(analyzedTracks.speechiness);
+
+  console.log(analyzedTracks);
   return (
     <div className="snap-y snap-mandatory h-screen w-screen overflow-scroll overflow-x-hidden scroll-smooth">
       <div className="snap-end bg-[#1a1a1a] h-screen flex items-center justify-center text-sm flex-col">
@@ -148,41 +152,55 @@ const Stats = () => {
           </div>
         </div>
       </div>
-      <div className="snap-end bg-[#1a1a1a] h-screen flex items-center justify-center text-sm flex-col">
-        <div className="container max-w-6xl flex border-2 flex-wrap">
+      <div className="snap-end bg-[#090a0c] h-screen flex items-center justify-center text-sm flex-col">
+        <h1 className="text-6xl font-bold mb-4">Analysis</h1>
+        <div className="container place-items-center grid grid-cols-3 grid-rows-3 rounded-3xl py-4 bg-[#14171c]">
           {analyzedTracks && (
             <>
-              <div className="w-96 m-2">
-                <h1>Energy</h1>
+              <div className="m-4">
+                <h1 className="font-extrabold text-lg">Energy</h1>
                 <Progress value={analyzedTracks.energy} />
+                <p>Music that feels fast, loud, and noisy.</p>
               </div>
-              <div className="w-96 m-2">
-                <h1>Loudness</h1>
-                <Progress value={analyzedTracks.loudness} />
+              <div className="m-4">
+                <h1 className="font-extrabold text-lg">Relaxed</h1>
+                <Progress value={analyzedTracks.energy} />
+                <p>Music that is slow and calm.</p>
               </div>
-              <div className="w-96 m-2">
-                <h1>Acousticness</h1>
+              <div className=" m-4">
+                <h1 className="font-extrabold text-lg">Acousticness</h1>
                 <Progress value={analyzedTracks.acousticness} />
+                <p>Music with no electric instruments.</p>
               </div>
-              <div className="w-96 m-2">
-                <h1>Danceability</h1>
+              <div className=" m-4">
+                <h1 className="font-extrabold text-lg">Danceability</h1>
                 <Progress value={analyzedTracks.danceability} />
+                <p>Music that makes you want to move it.</p>
               </div>
-              <div className="w-96 m-2">
-                <h1>Instrumentallness</h1>
+              <div className=" m-4">
+                <h1 className="font-extrabold text-lg">Instrumentallness</h1>
                 <Progress value={analyzedTracks.instrumentalness} />
+                <p>Music that contains no vocals.</p>
               </div>
-              <div className="w-96 m-2">
-                <h1>Liveness</h1>
+              <div className=" m-4">
+                <h1 className="font-extrabold text-lg">Liveness</h1>
                 <Progress value={analyzedTracks.liveness} />
+                <p>Music that is performed live.</p>
               </div>
-              <div className="w-96 m-2">
-                <h1>Loudness</h1>
-                <Progress value={analyzedTracks.loudness} />
-              </div>
-              <div className="w-96 m-2">
-                <h1>Speechness</h1>
+              <div className=" m-4">
+                <h1 className="font-extrabold text-lg">Speechness</h1>
                 <Progress value={analyzedTracks.speechiness} />
+                <p>Podcasts, Poetries, Talk Shows & etc</p>
+              </div>
+              <div className=" m-4">
+                <h1 className="font-extrabold text-lg">Positiviness</h1>
+                <Progress value={analyzedTracks.valence} />
+                <p>Music that is happy and cheerful.</p>
+              </div>
+              <div className=" m-4">
+                <h1 className="font-extrabold text-lg">Dark</h1>
+                <Progress value={1 - analyzedTracks?.valence} />
+                <p>Music that is sad, depressing, or angry.</p>
               </div>
             </>
           )}

@@ -90,3 +90,28 @@ export const getAudioFeatures = async (token, ids) => {
     return error;
   }
 };
+export const getUser = async (token) => {
+  try {
+    const data = await axios.get(`${baseURL}me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data.data;
+  } catch (error) {
+    return error;
+  }
+};
+export const getUserPlaylists = async (token) => {
+  try {
+    const userId = await getUser(token);
+    const data = await axios.get(`${baseURL}users/${userId.id}/playlists`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data.data;
+  } catch (error) {
+    return error;
+  }
+};
