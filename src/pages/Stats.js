@@ -122,7 +122,7 @@ const Stats = () => {
           </div>
         </div>
       </div>
-      <div className="snap-end bg-[#1a1a1a] h-screen flex items-center justify-center text-sm flex-col">
+      <div className="snap-end bg-[#1a1a1a] h-screen flex items-center justify-center text-sm flex-col animate-fade-up">
         <h1 className="text-6xl font-bold mb-4">Top Tracks</h1>
         <div className="container max-w-6xl ">
           <div className="flex justify-between mx-auto">

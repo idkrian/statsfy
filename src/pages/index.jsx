@@ -7,28 +7,31 @@ const auth_endpoint = "https://accounts.spotify.com/authorize";
 const redirect_url = "http://localhost:3000/stats/";
 const scopes =
   "user-top-read user-read-recently-played playlist-read-private playlist-read-collaborative user-read-email";
-console.log(
-  `${auth_endpoint}?client_id=${client_id}&redirect_uri=${redirect_url}&response_type=${response_type}&scope=${scopes}`
-);
 
 export default function Home() {
   return (
     <>
       <div className="bg-gradient-to-b from-[#6441A5] to-[#2a0845] w-screen h-screen flex items-center justify-center text-4xl">
-        <div>Clique Aqui e veja suas stats!</div>
-        <div>
-          <Image
-            src={logo}
-            width={500}
-            height={500}
-            alt="Picture of the author"
-          />
+        <div className="container flex items-center justify-center">
+          <div className="my-5">
+            <p>See stats about your songs, playlists and albums!</p>
+            <a
+              className="text-xl"
+              href={`${auth_endpoint}?client_id=${client_id}&redirect_uri=${redirect_url}&response_type=${response_type}&scope=${scopes}`}
+            >
+              <button className="rounded-xl bg-black p-3">Try now!</button>
+            </a>
+          </div>
+          <div>
+            <Image
+              className="animate-wiggle animate-infinite animate-ease-in"
+              src={logo}
+              width={400}
+              height={400}
+              alt="Picture of the author"
+            />
+          </div>
         </div>
-        <a
-          href={`${auth_endpoint}?client_id=${client_id}&redirect_uri=${redirect_url}&response_type=${response_type}&scope=${scopes}`}
-        >
-          <button>Clica aqui</button>
-        </a>
       </div>
     </>
   );
