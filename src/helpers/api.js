@@ -21,10 +21,10 @@ export const handleToken = async (token) => {
     return error;
   }
 };
-export const getTopArtists = async (token) => {
+export const getTopItems = async (token, term, type) => {
   try {
     const data = await axios.get(
-      `${baseURL}me/top/artists?time_range=long_term&limit=10`,
+      `${baseURL}me/top/${type}?time_range=${term}&limit=10`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -36,21 +36,7 @@ export const getTopArtists = async (token) => {
     return error;
   }
 };
-export const getTopTracks = async (token) => {
-  try {
-    const data = await axios.get(
-      `${baseURL}me/top/tracks?time_range=long_term&limit=10`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return data.data.items;
-  } catch (error) {
-    return error;
-  }
-};
+
 export const getTrack = async (token, id) => {
   try {
     const data = await axios.get(`${baseURL}/tracks/${id}`, {

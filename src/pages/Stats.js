@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import {
   getTopArtists,
   getTopTracks,
@@ -7,15 +9,25 @@ import {
   getAudioFeatures,
   getUser,
   getUserPlaylists,
+  getTopItems,
 } from "@/helpers/api";
 import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Stats = () => {
+  const [token, setToken] = useState("");
   const [topArtists, setTopArtists] = useState();
   const [topTracks, setTopTracks] = useState();
   const [recentlyPlayed, setRecentlyPlayed] = useState();
   const [audioFeatures, setAudioFeatures] = useState();
   const [analyzedTracks, setAnalyzedTracks] = useState();
+  const [loading, setLoading] = useState(false);
   const labels = [
     "energy",
     "loudness",
@@ -63,13 +75,19 @@ const Stats = () => {
   }
 
   useEffect(() => {
+    AOS.init();
     async function getData() {
+      setLoading(true);
       const tokenData = await handleToken();
-      const topArtistsData = await getTopArtists(tokenData);
+      setToken(tokenData);
+      const topArtistsData = await getTopItems(
+        tokenData,
+        "long_term",
+        "artists"
+      );
       setTopArtists(topArtistsData);
-      const topTrackData = await getTopTracks(tokenData);
+      const topTrackData = await getTopItems(tokenData, "long_term", "tracks");
       setTopTracks(topTrackData);
-
       const recentlyPlayedData = await getRecentlyPlayed(tokenData);
       setRecentlyPlayed(recentlyPlayedData);
       const recentlyPlayedArray = recentlyPlayedData.map((e) => e.track.id);
@@ -83,6 +101,7 @@ const Stats = () => {
       const analyzedTrack = formatAnalysedTrack(analyzedTracksArrayData);
       setAnalyzedTracks(analyzedTrack);
       const userPlaylistsData = await getUserPlaylists(tokenData);
+      setLoading(false);
     }
     getData();
   }, []);
@@ -91,18 +110,42 @@ const Stats = () => {
   //   setToken("");
   //   window.localStorage.removeItem("token");
   // };
-
+  // if (loading) {
+  //   return <div>loading</div>;
+  // }
+  // function updateData(type, term) {
+  //   const updatedData = getTopItems(token, term, type);
+  // }
+  console.log(topArtists);
   return (
-    <div className="snap-y snap-mandatory h-screen w-screen overflow-scroll overflow-x-hidden scroll-smooth">
-      <div className="snap-end bg-[#1a1a1a] h-screen flex items-center justify-center text-sm flex-col">
-        <h1 className="text-6xl font-bold mb-4">Top Artists</h1>
+    <div className="scroll-smooth bg-[#090a0c]">
+      <div className="my-40 flex items-center justify-center text-sm flex-col animate-fade-up">
+        <h1 className="text-5xl font-bold mb-4">Top Artists</h1>
+        <select
+          id="time_range"
+          className="bg-[#14171c] text-gray-200 text-sm rounded-lg focus:ring-purple focus:border-purple block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple dark:focus:border-purple"
+          onChange={async (e) => {
+            const updatedData = await getTopItems(
+              token,
+              e.target.value,
+              "artists"
+            );
+            setTopArtists(updatedData);
+          }}
+        >
+          <option defaultValue value="long_term">
+            Long Term
+          </option>
+          <option value="medium_term">Medium Term</option>
+          <option value="short_term">Short Term</option>
+        </select>
         <div className="container max-w-6xl ">
           <div className="flex justify-between mx-auto">
             <div className="flex flex-col justify-center">
               {topArtists !== undefined &&
                 topArtists.map((i, index) => (
                   <div key={i.id} className="flex items-center mx-4 my-1">
-                    <span className="text-xl font-semibold mr-2">
+                    <span className="text-xl font-semibold mr-2 text-[#5D3FD3]">
                       {index + 1}
                     </span>
                     <p className="text-2xl font-semibold">{i.name}</p>
@@ -114,7 +157,7 @@ const Stats = () => {
                 <div>
                   <img
                     src={topArtists[0].images[0].url}
-                    className="rounded-xl"
+                    className="rounded-xl w-[28rem]"
                   />
                 </div>
               )}
@@ -122,15 +165,36 @@ const Stats = () => {
           </div>
         </div>
       </div>
-      <div className="snap-end bg-[#1a1a1a] h-screen flex items-center justify-center text-sm flex-col animate-fade-up">
-        <h1 className="text-6xl font-bold mb-4">Top Tracks</h1>
+      <div
+        className="mb-40 flex items-center justify-center text-sm flex-col "
+        data-aos="fade-up"
+      >
+        <h1 className="text-5xl font-bold mb-4">Top Tracks</h1>
+        <select
+          id="time_range"
+          className="bg-[#14171c] text-gray-200 text-sm rounded-lg focus:ring-purple focus:border-purple block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple dark:focus:border-purple"
+          onChange={async (e) => {
+            const updatedData = await getTopItems(
+              token,
+              e.target.value,
+              "tracks"
+            );
+            setTopTracks(updatedData);
+          }}
+        >
+          <option defaultValue value="long_term">
+            Long Term
+          </option>
+          <option value="medium_term">Medium Term</option>
+          <option value="short_term">Short Term</option>
+        </select>
         <div className="container max-w-6xl ">
           <div className="flex justify-between mx-auto">
             <div className="flex flex-col justify-center">
               {topTracks !== undefined &&
                 topTracks.map((i, index) => (
                   <div key={i.id} className="flex items-center mx-4 my-1">
-                    <span className="text-xl font-semibold mr-2">
+                    <span className="text-xl font-semibold mr-2 text-[#5D3FD3]">
                       {index + 1}
                     </span>
                     <p className="text-2xl font-semibold">{i.name}</p>
@@ -142,7 +206,7 @@ const Stats = () => {
                 <div>
                   <img
                     src={topTracks[0].album.images[0].url}
-                    className="rounded-xl"
+                    className="rounded-xl w-[28rem]"
                   />
                 </div>
               )}
@@ -150,8 +214,11 @@ const Stats = () => {
           </div>
         </div>
       </div>
-      <div className="snap-end bg-[#090a0c] h-screen flex items-center justify-center text-sm flex-col">
-        <h1 className="text-6xl font-bold mb-4">Analysis</h1>
+      <div
+        className="flex items-center justify-center text-sm flex-col"
+        data-aos="fade-up"
+      >
+        <h1 className="text-5xl font-bold mb-4">Analysis</h1>
         <div className="container place-items-center grid grid-cols-3 grid-rows-3 rounded-3xl py-4 bg-[#14171c]">
           {analyzedTracks && (
             <>
