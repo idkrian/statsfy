@@ -33,7 +33,10 @@ export const getTopItems = async (token, term, type) => {
     );
     return data.data.items;
   } catch (error) {
-    return error;
+    return {
+      status: error.status,
+      message: error.message,
+    };
   }
 };
 

@@ -2,23 +2,19 @@ import React, { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import {
-  getTopArtists,
-  getTopTracks,
   handleToken,
   getRecentlyPlayed,
-  getAudioFeatures,
-  getUser,
   getUserPlaylists,
   getTopItems,
 } from "@/helpers/api";
 import { Progress } from "@/components/ui/progress";
+
+import { useRouter } from "next/router";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  analyseTracks,
+  formatAnalysedTrack,
+  handleRecentlyPlayed,
+} from "@/helpers/handlers";
 
 const Stats = () => {
   const [token, setToken] = useState("");
@@ -28,95 +24,52 @@ const Stats = () => {
   const [audioFeatures, setAudioFeatures] = useState();
   const [analyzedTracks, setAnalyzedTracks] = useState();
   const [loading, setLoading] = useState(false);
-  const labels = [
-    "energy",
-    "loudness",
-    "acousticness",
-    "danceability",
-    "instrumentalness",
-    "liveness",
-    "loudness",
-    "speechiness",
-    "valence",
-  ];
-  async function handleRecentlyPlayed(tokenData, recentlyPlayedArray) {
-    let minhaString = "";
-    for (let i = 0; i < recentlyPlayedArray.length; i++) {
-      minhaString += recentlyPlayedArray[i] + ",";
-    }
-    const audioFeaturesData = await getAudioFeatures(tokenData, minhaString);
-    return audioFeaturesData;
-  }
 
-  async function handleAverage(value, testinhun) {
-    const energy = testinhun.map((e) => e[value]);
-    let sum = 0;
-    for (let i = 0; i < energy.length; i++) {
-      sum += energy[i];
-    }
-    return sum / energy.length;
-  }
-
-  async function analyseTracks(recentlyPlayedFormated) {
-    let newArray = [];
-    labels.forEach(async (item) => {
-      const res = await handleAverage(item, recentlyPlayedFormated);
-      newArray.push(res.toFixed(2));
-    });
-
-    return newArray;
-  }
-  function formatAnalysedTrack(trackAverage) {
-    const track = {};
-    for (let i = 0; i < trackAverage.length; i++) {
-      track[labels[i]] = trackAverage[i];
-    }
-    return track;
-  }
+  const router = useRouter();
 
   useEffect(() => {
     AOS.init();
     async function getData() {
-      setLoading(true);
-      const tokenData = await handleToken();
-      setToken(tokenData);
-      const topArtistsData = await getTopItems(
-        tokenData,
-        "long_term",
-        "artists"
-      );
-      setTopArtists(topArtistsData);
-      const topTrackData = await getTopItems(tokenData, "long_term", "tracks");
-      setTopTracks(topTrackData);
-      const recentlyPlayedData = await getRecentlyPlayed(tokenData);
-      setRecentlyPlayed(recentlyPlayedData);
-      const recentlyPlayedArray = recentlyPlayedData.map((e) => e.track.id);
-      const recentlyPlayedFormated = await handleRecentlyPlayed(
-        tokenData,
-        recentlyPlayedArray
-      );
-      const analyzedTracksArrayData = await analyseTracks(
-        recentlyPlayedFormated
-      );
-      const analyzedTrack = formatAnalysedTrack(analyzedTracksArrayData);
-      setAnalyzedTracks(analyzedTrack);
-      const userPlaylistsData = await getUserPlaylists(tokenData);
-      setLoading(false);
+      try {
+        setLoading(true);
+        const tokenData = await handleToken();
+        setToken(tokenData);
+        const topArtistsData = await getTopItems(
+          tokenData,
+          "long_term",
+          "artists"
+        );
+        if (topArtistsData?.message?.includes("401")) {
+          return router.push("/");
+        }
+        setTopArtists(topArtistsData);
+        const topTrackData = await getTopItems(
+          tokenData,
+          "long_term",
+          "tracks"
+        );
+        setTopTracks(topTrackData);
+        const recentlyPlayedData = await getRecentlyPlayed(tokenData);
+        setRecentlyPlayed(recentlyPlayedData);
+        const recentlyPlayedArray = recentlyPlayedData.map((e) => e.track.id);
+        const recentlyPlayedFormated = await handleRecentlyPlayed(
+          tokenData,
+          recentlyPlayedArray
+        );
+        const analyzedTracksArrayData = await analyseTracks(
+          recentlyPlayedFormated
+        );
+        const analyzedTrack = formatAnalysedTrack(analyzedTracksArrayData);
+        setAnalyzedTracks(analyzedTrack);
+        const userPlaylistsData = await getUserPlaylists(tokenData);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
     }
     getData();
   }, []);
-  //Implementar----
-  // const logout = () => {
-  //   setToken("");
-  //   window.localStorage.removeItem("token");
-  // };
-  // if (loading) {
-  //   return <div>loading</div>;
-  // }
-  // function updateData(type, term) {
-  //   const updatedData = getTopItems(token, term, type);
-  // }
-  console.log(topArtists);
+
   return (
     <div className="scroll-smooth bg-[#090a0c]">
       <div className="my-40 flex items-center justify-center text-sm flex-col animate-fade-up">
@@ -145,10 +98,12 @@ const Stats = () => {
               {topArtists !== undefined &&
                 topArtists.map((i, index) => (
                   <div key={i.id} className="flex items-center mx-4 my-1">
-                    <span className="text-xl font-semibold mr-2 text-[#5D3FD3]">
+                    <span className="text-xl font-bold mr-2 text-purple">
                       {index + 1}
                     </span>
-                    <p className="text-2xl font-semibold">{i.name}</p>
+                    <p className="text-2xl font-semibold hover:underline decoration-purple cursor-pointer transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-100  duration-300">
+                      {i.name}
+                    </p>
                   </div>
                 ))}
             </div>
@@ -194,7 +149,7 @@ const Stats = () => {
               {topTracks !== undefined &&
                 topTracks.map((i, index) => (
                   <div key={i.id} className="flex items-center mx-4 my-1">
-                    <span className="text-xl font-semibold mr-2 text-[#5D3FD3]">
+                    <span className="text-xl font-semibold mr-2 text-purple">
                       {index + 1}
                     </span>
                     <p className="text-2xl font-semibold">{i.name}</p>
@@ -215,7 +170,7 @@ const Stats = () => {
         </div>
       </div>
       <div
-        className="flex items-center justify-center text-sm flex-col"
+        className="flex items-center justify-center text-sm flex-col mb-40"
         data-aos="fade-up"
       >
         <h1 className="text-5xl font-bold mb-4">Analysis</h1>
