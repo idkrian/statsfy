@@ -71,7 +71,17 @@ const Stats = () => {
     }
     getData();
   }, []);
-
+  if (loading) {
+    return (
+      <div class="flex items-center justify-center min-h-screen p-5 bg-[#090a0c] min-w-screen">
+        <div class="flex space-x-2 animate-pulse">
+          <div class="w-3 h-3 bg-gray-500 rounded-full"></div>
+          <div class="w-3 h-3 bg-gray-500 rounded-full"></div>
+          <div class="w-3 h-3 bg-gray-500 rounded-full"></div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="scroll-smooth bg-[#090a0c]">
       <h1 className="text-7xl font-extrabold text-center my-20">
@@ -250,7 +260,7 @@ const Stats = () => {
         <div className="container place-items-center grid xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6 rounded-3xl py-4 bg-[#14171c]">
           {playlists &&
             playlists.items.map((item) => (
-              <div>
+              <div key={item.id}>
                 <img
                   src={item.images[0].url}
                   className="rounded-xl w-[24rem] h-[18rem]"
