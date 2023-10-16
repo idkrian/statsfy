@@ -15,7 +15,6 @@ import {
   formatAnalysedTrack,
   handleRecentlyPlayed,
 } from "@/helpers/handlers";
-
 const Stats = () => {
   const [token, setToken] = useState("");
   const [topArtists, setTopArtists] = useState();
@@ -23,6 +22,7 @@ const Stats = () => {
   const [recentlyPlayed, setRecentlyPlayed] = useState();
   const [audioFeatures, setAudioFeatures] = useState();
   const [analyzedTracks, setAnalyzedTracks] = useState();
+  const [playlists, setPlaylists] = useState();
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
@@ -40,6 +40,7 @@ const Stats = () => {
           "artists"
         );
         if (topArtistsData?.message?.includes("401")) {
+          localStorage.removeItem("token");
           return router.push("/");
         }
         setTopArtists(topArtistsData);
@@ -62,6 +63,8 @@ const Stats = () => {
         const analyzedTrack = formatAnalysedTrack(analyzedTracksArrayData);
         setAnalyzedTracks(analyzedTrack);
         const userPlaylistsData = await getUserPlaylists(tokenData);
+        console.log(userPlaylistsData);
+        setPlaylists(userPlaylistsData);
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -72,11 +75,17 @@ const Stats = () => {
 
   return (
     <div className="scroll-smooth bg-[#090a0c]">
-      <div className="my-40 flex items-center justify-center text-sm flex-col animate-fade-up">
-        <h1 className="text-5xl font-bold mb-4">Top Artists</h1>
+      <h1 className="text-6xl font-extrabold text-center my-20">
+        Stats
+        <span className="text-purple ">Fy</span>
+      </h1>
+      <div className="mb-40 flex items-center justify-center text-sm flex-col animate-fade-up">
+        <h1 className="text-4xl font-extrabold mb-4">
+          Top <span className="text-purple">Artists</span>
+        </h1>
         <select
           id="time_range"
-          className="bg-[#14171c] text-gray-200 text-sm rounded-lg focus:ring-purple focus:border-purple block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple dark:focus:border-purple"
+          className="bg-[#14171c] text-gray-200 text-sm rounded-lg p-3"
           onChange={async (e) => {
             const updatedData = await getTopItems(
               token,
@@ -93,8 +102,8 @@ const Stats = () => {
           <option value="short_term">Short Term</option>
         </select>
         <div className="container max-w-6xl ">
-          <div className="flex justify-between mx-auto">
-            <div className="flex flex-col justify-center">
+          <div className="flex justify-center md:justify-between mx-auto flex-wrap ">
+            <div className="flex flex-col justify-center mt-4">
               {topArtists !== undefined &&
                 topArtists.map((i, index) => (
                   <div key={i.id} className="flex items-center mx-4 my-1">
@@ -124,10 +133,12 @@ const Stats = () => {
         className="mb-40 flex items-center justify-center text-sm flex-col "
         data-aos="fade-up"
       >
-        <h1 className="text-5xl font-bold mb-4">Top Tracks</h1>
+        <h1 className="text-4xl font-extrabold mb-4">
+          Top <span className="text-purple">Tracks</span>
+        </h1>
         <select
           id="time_range"
-          className="bg-[#14171c] text-gray-200 text-sm rounded-lg focus:ring-purple focus:border-purple block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-purple dark:focus:border-purple"
+          className="bg-[#14171c] text-gray-200 text-sm rounded-lg p-3"
           onChange={async (e) => {
             const updatedData = await getTopItems(
               token,
@@ -144,7 +155,7 @@ const Stats = () => {
           <option value="short_term">Short Term</option>
         </select>
         <div className="container max-w-6xl ">
-          <div className="flex justify-between mx-auto">
+          <div className="flex justify-center md:justify-between mx-auto flex-wrap ">
             <div className="flex flex-col justify-center">
               {topTracks !== undefined &&
                 topTracks.map((i, index) => (
@@ -170,11 +181,13 @@ const Stats = () => {
         </div>
       </div>
       <div
-        className="flex items-center justify-center text-sm flex-col mb-40"
+        className="flex items-center justify-center text-sm flex-col mb-40 mx-6"
         data-aos="fade-up"
       >
-        <h1 className="text-5xl font-bold mb-4">Analysis</h1>
-        <div className="container place-items-center grid grid-cols-3 grid-rows-3 rounded-3xl py-4 bg-[#14171c]">
+        <h1 className="text-4xl font-extrabold mb-4">
+          Songs <span className="text-purple">Analisys</span>
+        </h1>
+        <div className="container place-items-center grid md:grid-cols-3 sm:grid-cols-2  grid-rows-2 rounded-3xl py-4 bg-[#14171c]">
           {analyzedTracks && (
             <>
               <div className="m-4">
@@ -224,6 +237,26 @@ const Stats = () => {
               </div>
             </>
           )}
+        </div>
+      </div>
+      <div
+        className="flex items-center justify-center text-sm flex-col mb-40 mx-6"
+        data-aos="fade-up"
+      >
+        <h1 className="text-4xl font-extrabold mb-4">
+          Your <span className="text-purple">Playlists</span>
+        </h1>
+        <div className="container place-items-center grid xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6 rounded-3xl py-4 bg-[#14171c]">
+          {playlists &&
+            playlists.items.map((item) => (
+              <div>
+                <img
+                  src={item.images[0].url}
+                  className="rounded-xl w-[24rem] h-[18rem]"
+                />
+                <p className="text-center text-xl font-bold">{item.name}</p>
+              </div>
+            ))}
         </div>
       </div>
     </div>
