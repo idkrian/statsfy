@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import logo from "../images/spotify.png";
+import Logo from "../images/spotify.png";
 import Image from "next/image";
 
 const client_id = "287c949757504329b8508ecd7671196c";
@@ -20,20 +20,21 @@ export default function Home() {
   };
   return (
     <>
-      <div className="bg-gradient-to-b from-[#6441A5] to-[#2a0845] w-screen h-screen flex items-center justify-center text-4xl">
-        <div className="container flex items-center justify-center">
-          <div className="my-5">
-            <p>See stats about your songs, playlists and albums!</p>
+      <div className="bg-[url(../images/gifBg.gif)] bg-cover bg-center bg w-screen h-screen flex items-center justify-center bg-blend-saturation ">
+        <div className="container text-4xl flex items-center justify-between px-56 w-full h-full backdrop-blur-[3px]">
+          <div className="mx-5">
+            <h1>See stats about your songs, artists, playlists and more!</h1>
+
             <a className="text-xl" onClick={handleClick}>
               <button className="rounded-xl bg-black p-3">Try now!</button>
             </a>
           </div>
-          <div>
+          <div className="">
             <Image
-              className="animate-wiggle animate-infinite animate-ease-in"
-              src={logo}
+              className="drop-shadow-md animate-wiggle animate-infinite animate-ease-in "
+              src={Logo}
               width={400}
-              height={400}
+              height={300}
               alt="Picture of the author"
             />
           </div>

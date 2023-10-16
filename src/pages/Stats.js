@@ -63,7 +63,6 @@ const Stats = () => {
         const analyzedTrack = formatAnalysedTrack(analyzedTracksArrayData);
         setAnalyzedTracks(analyzedTrack);
         const userPlaylistsData = await getUserPlaylists(tokenData);
-        console.log(userPlaylistsData);
         setPlaylists(userPlaylistsData);
         setLoading(false);
       } catch (error) {
@@ -75,7 +74,7 @@ const Stats = () => {
 
   return (
     <div className="scroll-smooth bg-[#090a0c]">
-      <h1 className="text-6xl font-extrabold text-center my-20">
+      <h1 className="text-7xl font-extrabold text-center my-20">
         Stats
         <span className="text-purple ">Fy</span>
       </h1>
@@ -110,7 +109,7 @@ const Stats = () => {
                     <span className="text-xl font-bold mr-2 text-purple">
                       {index + 1}
                     </span>
-                    <p className="text-2xl font-semibold hover:underline decoration-purple cursor-pointer transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-100  duration-300">
+                    <p className="text-2xl font-semibold hover:underline decoration-purple cursor-pointer transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-100 duration-200">
                       {i.name}
                     </p>
                   </div>
@@ -163,7 +162,9 @@ const Stats = () => {
                     <span className="text-xl font-semibold mr-2 text-purple">
                       {index + 1}
                     </span>
-                    <p className="text-2xl font-semibold">{i.name}</p>
+                    <p className="text-2xl font-semibold hover:underline decoration-purple cursor-pointer transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-100 duration-200">
+                      {i.name}
+                    </p>
                   </div>
                 ))}
             </div>
